@@ -4,13 +4,8 @@
       <BarraLateral @alternarModoEscuro="alternarModoEscuro"/>
     </div>
     <div class="column is-three-quarter conteudo">
-      <FormularioTarefa @salvarTarefa="salvarTarefa" />
-      <ListaTarefas v-if="tarefas.length" :tarefas="tarefas" />
-      <div v-else >
-        <BoxPadrao>
-          Voce nao esta muito produtivo hoje :(
-        </BoxPadrao>
-      </div>
+      <NotificacoesArticle />
+      <router-view />
     </div>
   </main>
 </template>
@@ -18,28 +13,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BarraLateral from './components/BarraLateral.vue';
-import FormularioTarefa from './components/FormularioTarefa.vue';
-import ListaTarefas from './components/ListaTarefas.vue';
-import ITarefa from './interfaces/ITarefa';
-import BoxPadrao from './components/BoxPadrao.vue';
+import NotificacoesArticle from './components/NotificacoesArticle.vue';
 
 export default defineComponent({
   name: 'App',
   methods: {
-    salvarTarefa(tarefa: ITarefa): void {
-      this.tarefas.push(tarefa);
-    },
     alternarModoEscuro(): void {
       this.modoEscuro = !this.modoEscuro;
     }
   },
   data() {
     return {
-      tarefas: [] as ITarefa[],
       modoEscuro: false
     }
   },
-  components: { BarraLateral, FormularioTarefa, ListaTarefas, BoxPadrao }
+  components: { BarraLateral  , NotificacoesArticle }
 });
 </script>
 

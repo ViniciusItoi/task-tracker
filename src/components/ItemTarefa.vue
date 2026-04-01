@@ -4,6 +4,9 @@
             <span>{{ tarefa.descricao || 'Tarefa sem descrição' }}</span>
         </div>
         <div>
+            <span>{{ tarefa.projeto?.nome || 'Projeto não especificado' }}</span>
+        </div>
+        <div>
             <span>{{ new Date(tarefa.tempoDecorrido * 1000).toISOString().substr(11, 8) }}</span>
         </div>
     </BoxPadrao>
