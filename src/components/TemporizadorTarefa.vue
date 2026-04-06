@@ -8,7 +8,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onBeforeUnmount, ref } from 'vue';
 import CronometroTarefa from './CronometroTarefa.vue';
 import BotaoPadrao from './BotaoPadrao.vue';
 
@@ -19,31 +19,54 @@ export default defineComponent({
         CronometroTarefa,
         BotaoPadrao
     },
-    data() {
-        return {
-            tempoEmSegundos: 0,
-            cronometro: 0,
-            cronometroRodando: false
+    setup(_, { emit }) {
+        const tempoEmSegundos = ref(0);
+        const cronometro = ref<ReturnType<typeof setInterval> | null>(null);
+        const cronometroRodando = ref(false);
+
+        function limparCronometro(): void {
+            if (cronometro.value) {
+                clearInterval(cronometro.value);
+                cronometro.value = null;
+            }
         }
-    },
-    methods: {
-        iniciarTarefa() {
-            this.cronometroRodando = true;
-            this.cronometro = setInterval(() => {
-                this.tempoEmSegundos++;
+
+        function iniciarTarefa(): void {
+            limparCronometro();
+            cronometroRodando.value = true;
+            cronometro.value = setInterval(() => {
+                tempoEmSegundos.value += 1;
             }, 1000);
-        },
-        pararTarefa() {
-            this.cronometroRodando = false;
-            clearInterval(this.cronometro);
-            this.$emit('aoTemporizadorFinalizado', this.tempoEmSegundos);
-            this.tempoEmSegundos = 0;
-        },
-    },
-    computed: {
-        tempoDecorrido(): string {
-            return new Date(this.tempoEmSegundos * 1000).toISOString().substr(11, 8);
         }
+
+        function pararTarefa(): void {
+            cronometroRodando.value = false;
+            limparCronometro();
+            emit('aoTemporizadorFinalizado', tempoEmSegundos.value);
+            tempoEmSegundos.value = 0;
+        }
+
+        const tempoDecorrido = computed(() => {
+            const tempoNormalizado = Number(tempoEmSegundos.value ?? 0);
+
+            if (!Number.isFinite(tempoNormalizado) || tempoNormalizado < 0) {
+                return '00:00:00';
+            }
+
+            return new Date(tempoNormalizado * 1000).toISOString().substring(11, 19);
+        });
+
+        onBeforeUnmount(() => {
+            limparCronometro();
+        });
+
+        return {
+            tempoEmSegundos,
+            cronometroRodando,
+            iniciarTarefa,
+            pararTarefa,
+            tempoDecorrido
+        };
     }
 });
 </script>

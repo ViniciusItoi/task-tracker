@@ -12,11 +12,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import TabelaProjetos from '@/components/TabelaProjetos.vue';
 import ModalProjeto from '@/components/ModalProjeto.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
-import { projetosModalMixin } from '@/mixins/projetosModal';
+import { tipoNotificacao } from '@/interfaces/INotificacao';
+import useNotificador from '@/hooks/notificador';
+import { useStore } from '@/store';
+import { OBTER_PROJETOS } from '@/store/tipoAcoes';
+import { useProjetosModal } from '@/composables/useProjetosModal';
 
 export default defineComponent({
     name: 'ProjetosView',
@@ -25,7 +29,23 @@ export default defineComponent({
         ModalProjeto,
         BotaoPadrao
     },
-    mixins: [projetosModalMixin],
+    setup() {
+        const store = useStore();
+        const { notificar } = useNotificador();
+        const projetosModal = useProjetosModal();
+
+        onMounted(async () => {
+            try {
+                await store.dispatch(OBTER_PROJETOS);
+            } catch {
+                notificar('Erro ao carregar projetos', 'Não foi possível carregar a lista de projetos.', tipoNotificacao.ERRO);
+            }
+        });
+
+        return {
+            ...projetosModal
+        };
+    },
     props: {
         projetoId: {
             type: String,

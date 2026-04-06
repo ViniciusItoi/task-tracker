@@ -31,13 +31,20 @@ export default defineComponent({
     props: {
         projetos: { type: Array as () => IProjeto[], required: true }
     },
-    methods: {
-        apagarProjeto(id: string): void {
-            this.$emit('apagarProjeto', id);
-        },
-        editarProjeto(projetoEditado: IProjeto): void {
-            this.$emit('editarProjeto', projetoEditado);
+    emits: ['apagarProjeto', 'editarProjeto'],
+    setup(_, { emit }) {
+        function apagarProjeto(id: string): void {
+            emit('apagarProjeto', id);
         }
+
+        function editarProjeto(projetoEditado: IProjeto): void {
+            emit('editarProjeto', projetoEditado);
+        }
+
+        return {
+            apagarProjeto,
+            editarProjeto
+        };
     }
 });
 </script>

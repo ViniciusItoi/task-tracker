@@ -47,13 +47,19 @@ export default defineComponent({
         }
     },
     emits: ['aoFechar', 'aoConfirmar'],
-    methods: {
-        fechar(): void {
-            this.$emit('aoFechar');
-        },
-        confirmar(): void {
-            this.$emit('aoConfirmar');
+    setup(_, { emit }) {
+        function fechar(): void {
+            emit('aoFechar');
         }
+
+        function confirmar(): void {
+            emit('aoConfirmar');
+        }
+
+        return {
+            fechar,
+            confirmar
+        };
     }
 });
 </script>

@@ -18,24 +18,32 @@
     </td>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import IProjeto from '@/interfaces/IProjeto';
 import 'bulma-tooltip/dist/css/bulma-tooltip.min.css';
 
 export default defineComponent({
     name: 'ItemProjeto',
     props: {
         projeto: {
-            type: Object,
+            type: Object as PropType<IProjeto>,
             required: true
         }
     },
-    methods: {
-        apagarProjeto(): void {
-            this.$emit('apagarProjeto', this.projeto.id);
-        },
-        editarProjeto(): void {
-            this.$emit('editarProjeto', this.projeto);
+    emits: ['apagarProjeto', 'editarProjeto'],
+    setup(props, { emit }) {
+        function apagarProjeto(): void {
+            emit('apagarProjeto', props.projeto.id);
         }
+
+        function editarProjeto(): void {
+            emit('editarProjeto', props.projeto);
+        }
+
+        return {
+            apagarProjeto,
+            editarProjeto
+        };
     }
 });
 </script>

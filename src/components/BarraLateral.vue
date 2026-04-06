@@ -26,33 +26,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import BotaoPadrao from './BotaoPadrao.vue';
 
 export default defineComponent({
     name: 'BarraLateral',
     emits: ['alternarModoEscuro'],
-    data() {
-        return {
-            modoEscuro: false
-        }
-    },
     components: {
         BotaoPadrao
     },
-    methods: {
-        alternarModoEscuro(): void {
-            this.$emit('alternarModoEscuro');
-            this.modoEscuro = !this.modoEscuro;
+    setup(_, { emit }) {
+        const modoEscuro = ref(false);
+
+        function alternarModoEscuro(): void {
+            emit('alternarModoEscuro');
+            modoEscuro.value = !modoEscuro.value;
         }
-    },
-    computed: {
-        textoBotao(): string {
-            return this.modoEscuro ? 'Modo Claro' : 'Modo Escuro';
-        },
-        iconeBotao(): string {
-            return this.modoEscuro ? 'fas fa-sun' : 'fas fa-moon';
-        }
+
+        const textoBotao = computed(() => (modoEscuro.value ? 'Modo Claro' : 'Modo Escuro'));
+        const iconeBotao = computed(() => (modoEscuro.value ? 'fas fa-sun' : 'fas fa-moon'));
+
+        return {
+            alternarModoEscuro,
+            textoBotao,
+            iconeBotao
+        };
     }
 });
 </script>

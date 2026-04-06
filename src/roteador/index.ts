@@ -7,7 +7,20 @@ const rotas: RouteRecordRaw[] = [
     {
         path: "/",
         name: NOMES_ROTAS.TAREFAS,
-        component: TarefasView
+        component: TarefasView,
+        children: [
+            {
+                path: "novo",
+                name: NOMES_ROTAS.NOVA_TAREFA,
+                component: TarefasView
+            },
+            {
+                path: ":id",
+                name: NOMES_ROTAS.EDITAR_TAREFA,
+                component: TarefasView,
+                props: route => ({ tarefaId: String(route.params.id) })
+            }
+        ]
     },
     {
         path: "/projetos",

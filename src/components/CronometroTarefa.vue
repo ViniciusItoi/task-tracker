@@ -4,7 +4,7 @@
     </section>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'CronometroTarefa',
@@ -14,10 +14,20 @@ export default defineComponent({
             required: true
         }
     },
-    computed: {
-        tempoDecorrido(): string {
-            return new Date(this.tempoEmSegundos * 1000).toISOString().substr(11, 8);
-        }
+    setup(props) {
+        const tempoDecorrido = computed(() => {
+            const tempoNormalizado = Number(props.tempoEmSegundos ?? 0);
+
+            if (!Number.isFinite(tempoNormalizado) || tempoNormalizado < 0) {
+                return '00:00:00';
+            }
+
+            return new Date(tempoNormalizado * 1000).toISOString().substring(11, 19);
+        });
+
+        return {
+            tempoDecorrido
+        };
     }
 });
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="box has-text-weight-bold is-flex m-2 is-justify-content-space-between" :style="estilos">
+    <div class="box columns has-text-weight-bold is-flex m-2" :style="estilos">
         <slot></slot>
     </div>
 </template>
@@ -8,12 +8,14 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'BoxPadrao',
-    data() {
+    setup() {
+        const estilos = {
+            backgroundColor: '#FAF0CA',
+        };
+
         return {
-            estilos: {
-                backgroundColor: '#FAF0CA',
-            }
-        }
+            estilos
+        };
     }
 });
 </script>

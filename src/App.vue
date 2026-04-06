@@ -11,23 +11,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import BarraLateral from './components/BarraLateral.vue';
 import NotificacoesArticle from './components/NotificacoesArticle.vue';
 
 export default defineComponent({
   name: 'App',
-  methods: {
-    alternarModoEscuro(): void {
-      this.modoEscuro = !this.modoEscuro;
+  setup() {
+    const modoEscuro = ref(false);
+
+    function alternarModoEscuro(): void {
+      modoEscuro.value = !modoEscuro.value;
     }
-  },
-  data() {
+
     return {
-      modoEscuro: false
-    }
+      modoEscuro,
+      alternarModoEscuro
+    };
   },
-  components: { BarraLateral  , NotificacoesArticle }
+  components: { BarraLateral, NotificacoesArticle }
 });
 </script>
 

@@ -10,6 +10,11 @@ npm install
 npm run serve
 ```
 
+### Sobe a API local com UUID
+```
+npm run api
+```
+
 ### Compiles and minifies for production
 ```
 npm run build

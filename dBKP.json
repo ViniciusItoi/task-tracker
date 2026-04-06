@@ -1,0 +1,47 @@
+{
+  "projetos": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "nome": "Estudando Vue.js",
+      "descricao": "Estudando os conceitos básicos do Vue.js para criar um projeto de rastreamento de tarefas."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "nome": "Trabalhando",
+      "descricao": "Utilizando o Vue.js para fazer as atividades do trabalho."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000003",
+      "nome": "Lazer",
+      "descricao": "Jogando jogos, assistindo filmes e séries, e outras atividades de lazer para relaxar e se divertir."
+    },
+    {
+      "nome": "Projeto teste",
+      "descricao": "Este é o primeiro projeto para testar a listagem.",
+      "id": "dff0568a-7917-42d9-8b49-ac743128e8d4"
+    }
+  ],
+  "tarefas": [
+    {
+      "descricao": "Estudar os conceitos básicos do Vue.js para criar um projeto de rastreamento de tarefas.",
+      "tempoDecorrido": 120,
+      "projeto": {
+        "id": "00000000-0000-0000-0000-000000000001",
+        "nome": "Estudando Vue.js",
+        "descricao": "Estudando os conceitos básicos do Vue.js para criar um projeto de rastreamento de tarefas."
+      },
+      "id": "00000000-0000-0000-0000-000000000001"
+    },
+    {
+      "descricao": "Jogar jogos, assistir filmes e séries, e outras atividades de lazer para relaxar e se divertir.",
+      "tempoDecorrido": 180,
+      "projeto": {
+        "id": "00000000-0000-0000-0000-000000000003",
+        "nome": "Lazer",
+        "descricao": "Jogando jogos, assistindo filmes e séries, e outras atividades de lazer para relaxar e se divertir."
+      },
+      "id": "00000000-0000-0000-0000-000000000003"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

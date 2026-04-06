@@ -22,46 +22,84 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import TemporizadorTarefa from './TemporizadorTarefa.vue';
 import { useStore } from '@/store';
 import { tipoNotificacao } from '@/interfaces/INotificacao';
 import useNotificador from '@/hooks/notificador';
+import ITarefa from '@/interfaces/ITarefa';
 
 
 export default defineComponent({
   name: 'FormularioTarefa',
-  emits: ['salvarTarefa'],
+  emits: ['salvarTarefa', 'cancelarEdicao'],
   components: {
     TemporizadorTarefa
   },
-  data() {
-    return {
-      descricao: '',
-      idProjeto: ''
+  props: {
+    tarefaEmEdicao: {
+      type: Object as PropType<ITarefa | null>,
+      default: null
     }
   },
-  methods: {
-    finalizarTarefa(tempoDecorrido: number): void {
-      const projeto = this.projetos.find((p) => p.id === this.idProjeto);
+  setup(props, { emit }) {
+    const store = useStore();
+    const { notificar } = useNotificador();
+
+    const descricao = ref('');
+    const idProjeto = ref('');
+
+    const projetos = computed(() => store.state.projeto.projetos);
+
+    watch(
+      () => props.tarefaEmEdicao,
+      (nova: ITarefa | null) => {
+        if (nova) {
+          descricao.value = nova.descricao;
+          idProjeto.value = nova.projeto?.id ?? '';
+          return;
+        }
+
+        descricao.value = '';
+        idProjeto.value = '';
+      },
+      { immediate: true }
+    );
+
+    function finalizarTarefa(tempoDecorrido?: number): void {
+      const projeto = projetos.value.find((p) => p.id === idProjeto.value);
       if (!projeto) {
-        this.notificar('Erro ao finalizar a tarefa', `Adicione um projeto.`, tipoNotificacao.ERRO);
+        notificar('Erro ao finalizar a tarefa', 'Adicione um projeto.', tipoNotificacao.ERRO);
         return;
       }
-      this.$emit('salvarTarefa', {
-        descricao: this.descricao,
-        tempoDecorrido,
-        projeto: projeto
+
+      if (!descricao.value.trim()) {
+        notificar('Erro', 'Descrição da tarefa é obrigatória.', tipoNotificacao.ERRO);
+        return;
+      }
+
+      emit('salvarTarefa', {
+        descricao: descricao.value,
+        tempoDecorrido: tempoDecorrido ?? 0,
+        projeto,
+        id: props.tarefaEmEdicao?.id
       });
-      this.descricao = '';
+      descricao.value = '';
+      idProjeto.value = '';
     }
-  },
-  setup() {
-    const store = useStore();
-    const {notificar} = useNotificador();
+
+    function cancelarEdicao(): void {
+      descricao.value = '';
+      idProjeto.value = '';
+      emit('cancelarEdicao');
+    }
+
     return {
-      projetos: computed(() => store.state.projetos),
-      notificar
+      descricao,
+      idProjeto,
+      projetos,
+      finalizarTarefa,
+      cancelarEdicao
     }
   }
 });

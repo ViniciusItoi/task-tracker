@@ -1,5 +1,7 @@
 export const NOMES_ROTAS = {
     TAREFAS: 'Tarefas',
+    NOVA_TAREFA: 'NovaTarefa',
+    EDITAR_TAREFA: 'EditarTarefa',
     PROJETOS: 'Projetos',
     NOVO_PROJETO: 'NovoProjeto',
     EDITAR_PROJETO: 'EditarProjeto'

@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ref, watch } from 'vue';
 import IProjeto from '@/interfaces/IProjeto';
 import ModalPadrao from './ModalPadrao.vue';
 
@@ -26,12 +26,6 @@ export default defineComponent({
     name: 'ModalProjeto',
     components: {
         ModalPadrao
-    },
-    data() {
-        return {
-            nomeDoProjeto: '',
-            descricaoDoProjeto: ''
-        };
     },
     props: {
         aberto: {
@@ -48,31 +42,47 @@ export default defineComponent({
         }
     },
     emits: ['aoFechar', 'aoSalvar'],
-    watch: {
-        aberto(estaAberto: boolean): void {
-            if (estaAberto) {
-                this.preencherCampos();
-            }
-        },
-        projeto: {
-            immediate: true,
-            handler(): void {
-                this.preencherCampos();
-            }
+    setup(props, { emit }) {
+        const nomeDoProjeto = ref('');
+        const descricaoDoProjeto = ref('');
+
+        function preencherCampos(): void {
+            nomeDoProjeto.value = props.projeto?.nome ?? '';
+            descricaoDoProjeto.value = props.projeto?.descricao ?? '';
         }
-    },
-    methods: {
-        preencherCampos(): void {
-            this.nomeDoProjeto = this.projeto?.nome ?? '';
-            this.descricaoDoProjeto = this.projeto?.descricao ?? '';
-        },
-        fechar() {
-            this.$emit('aoFechar');
-        },
-        salvar() {
-            this.$emit('aoSalvar', this.nomeDoProjeto, this.descricaoDoProjeto);
-            this.fechar();
+
+        function fechar(): void {
+            emit('aoFechar');
         }
+
+        function salvar(): void {
+            emit('aoSalvar', nomeDoProjeto.value, descricaoDoProjeto.value);
+            fechar();
+        }
+
+        watch(
+            () => props.aberto,
+            (estaAberto: boolean) => {
+                if (estaAberto) {
+                    preencherCampos();
+                }
+            }
+        );
+
+        watch(
+            () => props.projeto,
+            () => {
+                preencherCampos();
+            },
+            { immediate: true }
+        );
+
+        return {
+            nomeDoProjeto,
+            descricaoDoProjeto,
+            fechar,
+            salvar
+        };
     }
 });
 </script>
